@@ -11,7 +11,7 @@ Run the following commands:
 - Build and enter the docker container environment (This may take quite a while the first time)
   - `cd reckon`
   - `make docker`
-- Within the reckon container execute the script to run all the tests
+- Within the reckon container execute the script to run all the tests (This will take quite a while unfortunately)
   - `python3 ./script.py`
 - Exit the container and return to this directory
 - Copy the data out of the container
