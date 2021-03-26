@@ -9,6 +9,7 @@ import plotting_functions as pf
 
 
 # ---- Failure analysis --------------------------- 
+repeats = 1
 
 def variable_mapping(var, mapping, exceptions = []):
     if var in exceptions:
@@ -103,9 +104,9 @@ def leader_plot():
     print("Plotting leader")
     mapping = {"10.0.0.1": "10.0.0.1", "10.0.0.2": "10.0.0.2", "10.0.0.3": "10.0.0.3", "10.0.0.4": "Client"}
     chart = alt.vconcat()
-    for repeat in range(5):
-        lr = f"../data/raw/rc/2021-02-17/paper-final/res_etcd.simple.go.leader.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}.res"
-        lb = f"../data/raw/rc/2021-02-17/paper-final/pcap_etcd.simple.go.leader.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}.pcap.throughput"
+    for repeat in range(repeats):
+        lr = f"results/res_etcd.simple.go.leader.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.res"
+        lb = f"results/pcap_etcd.simple.go.leader.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.pcap.throughput"
         lr,lb = preprocess(lr,lb, mapping)
         chart = alt.vconcat(chart, plot_rate_bw(lr,lb, (0,2), (0, 0.5), True, xdomain=(0,60)))
     alts.save(chart, "figures/leader.pdf")
@@ -114,9 +115,9 @@ def partial_partition_plot():
     print("Plotting partial partition")
     mapping = {"10.0.0.1": "10.0.0.1", "10.0.0.2": "10.0.0.2", "10.0.0.3": "10.0.0.3", "10.0.0.4": "Client"}
     chart = alt.vconcat()
-    for repeat in range(5):
-        lr = f"../data/raw/rc/2021-02-17/paper-final/res_etcd.simple.go.partial-partition.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}.res"
-        lb = f"../data/raw/rc/2021-02-17/paper-final/pcap_etcd.simple.go.partial-partition.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}.pcap.throughput"
+    for repeat in range(repeats):
+        lr = f"results/res_etcd.simple.go.partial-partition.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.res"
+        lb = f"results/pcap_etcd.simple.go.partial-partition.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.pcap.throughput"
         lr,lb = preprocess(lr,lb, mapping)
         chart = alt.vconcat(chart, plot_rate_bw(lr,lb, (0,2), (0, 0.5), True, xdomain=(0,60)))
     alts.save(chart, "figures/partial_parition.pdf")
@@ -125,9 +126,9 @@ def pre_vote_partition_plot():
     print("Plotting pre-vote partial partition")
     mapping = {"10.0.0.1": "10.0.0.1", "10.0.0.2": "10.0.0.2", "10.0.0.3": "10.0.0.3", "10.0.0.4": "Client"}
     chart = alt.vconcat()
-    for repeat in range(5):
-        lr = f"../data/raw/rc/2021-02-17/paper-final/res_etcd-pre-vote.simple.go.partial-partition.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}.res"
-        lb = f"../data/raw/rc/2021-02-17/paper-final/pcap_etcd-pre-vote.simple.go.partial-partition.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}.pcap.throughput"
+    for repeat in range(repeats):
+        lr = f"results/res_etcd-pre-vote.simple.go.partial-partition.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.res"
+        lb = f"results/pcap_etcd-pre-vote.simple.go.partial-partition.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.pcap.throughput"
         lr,lb = preprocess(lr,lb, mapping)
         chart = alt.vconcat(chart, plot_rate_bw(lr,lb, (0,2), (0, 0.5), True, xdomain=(0,60)))
     alts.save(chart, "figures/pre_vote_partition.pdf")
@@ -137,9 +138,9 @@ def intermittent_partial_plot():
     print("WARNING: This plot can crash the plotting software since it has too many data points, it can however be extracted via the jupyter notebook interface")
     mapping = {"10.0.0.1": "10.0.0.1", "10.0.0.2": "10.0.0.2", "10.0.0.3": "10.0.0.3", "10.0.0.4": "Client"}
     chart = alt.vconcat()
-    for repeat in range(5):
-        lr = f"../data/raw/rc/2021-02-17/paper-final/res_etcd.simple.go.intermittent-full.nn_3.nc_1.write_ratio_1.mtbf_10.rate_1000.duration_600.tag_repeat-{repeat}.res"
-        lb = f"../data/raw/rc/2021-02-17/paper-final/pcap_etcd.simple.go.intermittent-full.nn_3.nc_1.write_ratio_1.mtbf_10.rate_1000.duration_600.tag_repeat-{repeat}.pcap.throughput"
+    for repeat in range(repeats):
+        lr = f"results/res_etcd.simple.go.intermittent-full.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.res"
+        lb = f"results/pcap_etcd.simple.go.intermittent-full.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.pcap.throughput"
         lr,lb = preprocess(lr,lb, mapping)
         chart = alt.vconcat(chart, plot_rate_bw(lr,lb, (0,2), (0, 0.5), True, xdomain=(0,600)))
     alts.save(chart, "figures/intermittent_partial.pdf")
@@ -206,12 +207,12 @@ def validation_plot():
     # Rate Latency
     validation_data = pd.concat([
         pf.read_in_res(
-            f"../data/raw/rc/2021-02-17/paper-final-val/res_etcd.simple.go.none.nn_{n_servers}.nc_1.write_ratio_1.mtbf_1.rate_{rate}.duration_60.tag_repeat-{repeat}.res",
+            f"results/res_etcd.simple.go.none.nn_{n_servers}.nc_1.write_ratio_1.mtbf_1.rate_{rate}.duration_60.tag_repeat-{repeat}.res"
             {'repeat':repeat, 'rate':rate,'n_servers':n_servers}
         )
         for rate in [1,2000,4000,6000,8000,10000,12000,14000,16000,18000,20000,22000,24000,26000,28000,30000]
         for n_servers in [3,5,7,9]
-        for repeat in range(5)
+        for repeat in range(repeats)
     ], ignore_index=True)
 
     
@@ -219,7 +220,7 @@ def validation_plot():
     
     df = rate_lat_res
     chart = alt.vconcat()
-    for repeat in range(5):
+    for repeat in range(repeats):
         chart = alt.vconcat(chart, achieved_rate_plot(df[df['repeat'] == repeat], 100))
     alts.save(chart, "figures/validation_rate_latency.pdf")
 
@@ -234,7 +235,7 @@ def validation_plot():
     ])
     
     chart = alt.vconcat()
-    for repeat in range(5):
+    for repeat in range(repeats):
         rep_chart = alt.Chart(cdfs).mark_line(clip=True).encode(
             x=alt.X('latency:Q', axis=alt.Axis(title='Latency (ms)'), scale=alt.Scale(domain=[0,100])),
             y=alt.Y('percentile:Q', axis=alt.Axis(title='Cumulative fraction')),
@@ -247,9 +248,9 @@ def validation_plot():
     
 def wan_plot():
     chart = alt.vconcat()
-    for repeat in range(5):
+    for repeat in range(repeats):
         wan_data = pf.read_in_res(
-            f"../data/raw/rc/2021-02-17/paper-final/res_etcd.wan.go.none.nn_7.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}.res",
+            f"results/res_etcd.wan.go.none.nn_7.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}.res"
             {}
         )
     

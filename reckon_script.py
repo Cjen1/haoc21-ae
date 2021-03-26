@@ -20,7 +20,7 @@ def call_tcp_dump(tag, cmd):
     p.terminate()
 
 
-def run_test(system='etcd', topo='simple', nn='3', nc='1', write_rate='1', failure='none', mtbf='1', client='go', ncpr='False', rate='1000', duration='60', tag='', write_ratio='1'):
+def run_test(system='etcd', topo='simple', nn='3', nc='1', write_rate='1', failure='none', mtbf='1', client='go', ncpr='False', rate='1000', duration='60', tag='', write_ratio='1', do_tcp_dump=True):
     config = {
         "system" : system,
         "topo" : topo,
@@ -50,11 +50,16 @@ def run_test(system='etcd', topo='simple', nn='3', nc='1', write_rate='1', failu
 
     cmd = shlex.split(cmd)
 
-    call_tcp_dump(tag,cmd)
+    
+    if do_tcp_dump:
+        call_tcp_dump(tag,cmd)
+    else:
+        call(cmd)
 
     call("rm -rf /data/*", shell=True)
+    call("mn -c", shell=True)
 
-for repeat in range(5):
+for repeat in range(1):
     tag = 'repeat-{0}-bandwidth'.format(repeat)
     run_test(failure='leader', tag=tag)
     run_test(failure='partial-partition', tag=tag)
@@ -69,4 +74,4 @@ for repeat in range(5):
     params = [v for v in it.product(rates, n_servers)]
     np.random.shuffle(params)
     for rate, n_server in params:
-        run_test(nn=str(n_server), rate=str(rate), tag=(tag))
+        run_test(nn=str(n_server), rate=str(rate), tag=(tag), do_tcp_dump=False)

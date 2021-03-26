@@ -20,4 +20,4 @@ Run the following commands:
   - `./get_bandwidth.sh`
 - Create the figure direcotry and make the graphs
   - `mkdir figures`
-  - `python3 ./evaluate_results.py`
+  - `python3 ./plot_results.py`
