@@ -20,7 +20,7 @@ def call_tcp_dump(tag, cmd):
     p.terminate()
 
 
-def run_test(system='etcd', topo='simple', nn='3', nc='1', write_rate='1', failure='none', mtbf='1', client='go', ncpr='False', rate='1000', duration='60', tag='', write_ratio='1', do_tcp_dump=True):
+def run_test(system='etcd', topo='simple', nn='3', nc='1', write_rate='1', failure='none', mtbf='1', client='go', ncpr='False', rate='1000', duration='60', tag='', write_ratio='1', tcp_dump=True):
     config = {
         "system" : system,
         "topo" : topo,
@@ -51,7 +51,7 @@ def run_test(system='etcd', topo='simple', nn='3', nc='1', write_rate='1', failu
     cmd = shlex.split(cmd)
 
     
-    if do_tcp_dump:
+    if tcp_dump:
         call_tcp_dump(tag,cmd)
     else:
         call(cmd)
@@ -66,7 +66,7 @@ for repeat in range(1):
     run_test(failure='intermittent-partial', duration='600', mtbf='10', tag=tag)
     run_test(failure='intermittent-full', duration='600', mtbf='10', tag=tag)
     run_test(system='etcd-pre-vote', failure='partial-partition', tag=tag)
-    run_test(topo='wan', nn='7', tag=tag)
+    run_test(topo='wan', nn='7', tag=tag, tcp_dump = False)
 
     tag = 'repeat-{0}'.format(repeat)
     rates = [1,2000,4000,6000,8000,10000,12000,14000,16000,18000,20000,22000,24000,26000,28000,30000]
@@ -74,4 +74,4 @@ for repeat in range(1):
     params = [v for v in it.product(rates, n_servers)]
     np.random.shuffle(params)
     for rate, n_server in params:
-        run_test(nn=str(n_server), rate=str(rate), tag=(tag), do_tcp_dump=False)
+        run_test(nn=str(n_server), rate=str(rate), tag=(tag), tcp_dump=False)
