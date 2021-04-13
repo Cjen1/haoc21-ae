@@ -9,6 +9,7 @@ Run the following commands:
 - copy over the script into the reckon folder
   - `cp reckon_script.py reckon/script.py`
 - Build and enter the docker container environment (This may take quite a while the first time)
+  - `./update_reckon_dockerfile.sh`
   - `cd reckon`
   - `make run`
 - Within the reckon container execute the script to run all the tests (This will take quite a while unfortunately)
