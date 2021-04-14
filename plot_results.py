@@ -133,17 +133,17 @@ def pre_vote_partition_plot():
         chart = alt.vconcat(chart, plot_rate_bw(lr,lb, (0,2), (0, 0.5), True, xdomain=(0,60)))
     alts.save(chart, "figures/pre_vote_partition.pdf")
 
-def intermittent_partial_plot():
-    print("Plotting intermittent partial partition")
+def intermittent_full_plot():
+    print("Plotting intermittent full partition")
     print("WARNING: This plot can crash the plotting software since it has too many data points, it can however be extracted via the jupyter notebook interface")
     mapping = {"10.0.0.1": "10.0.0.1", "10.0.0.2": "10.0.0.2", "10.0.0.3": "10.0.0.3", "10.0.0.4": "Client"}
     chart = alt.vconcat()
     for repeat in range(repeats):
-        lr = f"results/res_etcd.simple.go.intermittent-full.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.res"
-        lb = f"results/pcap_etcd.simple.go.intermittent-full.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.pcap.throughput"
+        lr = f"results/res_etcd.simple.go.intermittent-full.nn_3.nc_1.write_ratio_1.mtbf_10.rate_1000.duration_600.tag_repeat-{repeat}-bandwidth.res"
+        lb = f"results/pcap_etcd.simple.go.intermittent-full.nn_3.nc_1.write_ratio_1.mtbf_10.rate_1000.duration_600.tag_repeat-{repeat}-bandwidth.pcap.throughput"
         lr,lb = preprocess(lr,lb, mapping)
         chart = alt.vconcat(chart, plot_rate_bw(lr,lb, (0,2), (0, 0.5), True, xdomain=(0,600)))
-    alts.save(chart, "figures/intermittent_partial.pdf")
+    alts.save(chart, "figures/intermittent_full.pdf")
 
 def achieved_rate_preprocess(df):
     def percentile(n):
@@ -207,7 +207,7 @@ def validation_plot():
     # Rate Latency
     validation_data = pd.concat([
         pf.read_in_res(
-            f"results/res_etcd.simple.go.none.nn_{n_servers}.nc_1.write_ratio_1.mtbf_1.rate_{rate}.duration_60.tag_repeat-{repeat}.res"
+            f"results/res_etcd.simple.go.none.nn_{n_servers}.nc_1.write_ratio_1.mtbf_1.rate_{rate}.duration_60.tag_repeat-{repeat}.res",
             {'repeat':repeat, 'rate':rate,'n_servers':n_servers}
         )
         for rate in [1,2000,4000,6000,8000,10000,12000,14000,16000,18000,20000,22000,24000,26000,28000,30000]
@@ -250,8 +250,8 @@ def wan_plot():
     chart = alt.vconcat()
     for repeat in range(repeats):
         wan_data = pf.read_in_res(
-            f"results/res_etcd.wan.go.none.nn_7.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}.res"
-            {}
+            f"results/res_etcd.wan.go.none.nn_7.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.res",
+            {'repeat':repeat}
         )
     
         cdf_wan = cdf(wan_data)
@@ -266,10 +266,10 @@ def wan_plot():
 
 
 if __name__ == "__main__":
-  alt.data_transformer.disable_max_rows()
+  alt.data_transformers.disable_max_rows()
 
   leader_plot()
   partial_partition_plot()
   validation_plot()
   wan_plot()
-  intermittent_partial_plot()
+  intermittent_full_plot()

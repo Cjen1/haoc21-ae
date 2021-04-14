@@ -6,14 +6,17 @@ This repo contains the scripts necessary to reproduce the HAOC 21 reckon paper
 
 ## Getting the data
 Run the following commands:
+- Set up environment
+  - python3 -m pip install -r requirements.txt
+  - npm install vega-lite vega-cli canvas
 - copy over the script into the reckon folder
-  - `cp reckon_script.py reckon/script.py`
+  - `cp reckon_script.py reckon/haoc.py`
 - Build and enter the docker container environment (This may take quite a while the first time)
   - `./update_reckon_dockerfile.sh`
   - `cd reckon`
   - `make run`
 - Within the reckon container execute the script to run all the tests (This will take quite a while unfortunately)
-  - `python3 ./script.py`
+  - `python3 ./haoc.py`
 - Exit the container and return to this directory
 - Copy the data out of the container
   - `docker cp reckon:/results ./results`
