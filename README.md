@@ -9,8 +9,8 @@ This repo contains the scripts necessary to reproduce the HAOC 21 reckon paper.
 
 ### Setting up the environment
 Run the following commands:
-- python3 -m pip install -r requirements.txt
-- npm install vega-lite vega-cli canvas
+- `python3 -m pip install -r requirements.txt`
+- `npm install vega-lite vega-cli canvas`
 
 ### Reproduce the experiements
 Run the following commands:
