@@ -1,14 +1,19 @@
 # haoc21-ae
 
-This repo contains the scripts necessary to reproduce the HAOC 21 reckon paper
+This repo contains the scripts necessary to reproduce the HAOC 21 reckon paper.
 
-# Steps
+## Steps
 
-## Getting the data
+### Cloning the repository
+`git clone --recurse-submodules https://github.com/Cjen1/haoc21-ae.git`
+
+### Setting up the environment
 Run the following commands:
-- Set up environment
-  - python3 -m pip install -r requirements.txt
-  - npm install vega-lite vega-cli canvas
+- python3 -m pip install -r requirements.txt
+- npm install vega-lite vega-cli canvas
+
+### Reproduce the experiements
+Run the following commands:
 - copy over the script into the reckon folder
   - `cp reckon_script.py reckon/haoc.py`
 - Build and enter the docker container environment (This may take quite a while the first time)
