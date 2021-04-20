@@ -270,6 +270,7 @@ if __name__ == "__main__":
 
   leader_plot()
   partial_partition_plot()
+  pre_vote_partition_plot()
 #   validation_plot()
   wan_plot()
 #   intermittent_full_plot()
