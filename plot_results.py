@@ -4,9 +4,13 @@ import altair as alt
 from altair import datum
 from datetime import datetime
 import altair_saver as alts
+import os.path
 
 import plotting_functions as pf
 
+WARNING = '\033[93m'
+FAIL = '\033[91m'
+ENDC = '\033[0m'
 
 # ---- Failure analysis --------------------------- 
 repeats = 1
@@ -99,6 +103,12 @@ def plot_rate_bw(rate, bw, yinnerdomain, yclientdomain, use_legend, xdomain=None
     
     return alt.vconcat(upper,lower).resolve_scale(x=alt.ResolveMode('shared'))
 
+def files_exist(files):
+    for f in files:
+        if not os.path.isfile(f):
+            print(FAIL + f"File is missing: {f}" + ENDC)
+            return False
+    return True
 
 def leader_plot():
     print("Plotting leader")
@@ -107,6 +117,8 @@ def leader_plot():
     for repeat in range(repeats):
         lr = f"results/res_etcd.simple.go.leader.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.res"
         lb = f"results/pcap_etcd.simple.go.leader.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.pcap.throughput"
+        if not files_exist([lr,lb]):
+            return
         lr,lb = preprocess(lr,lb, mapping)
         chart = alt.vconcat(chart, plot_rate_bw(lr,lb, (0,2), (0, 0.5), True, xdomain=(0,60)))
     alts.save(chart, "figures/leader.pdf")
@@ -118,6 +130,8 @@ def partial_partition_plot():
     for repeat in range(repeats):
         lr = f"results/res_etcd.simple.go.partial-partition.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.res"
         lb = f"results/pcap_etcd.simple.go.partial-partition.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.pcap.throughput"
+        if not files_exist([lr,lb]):
+            return
         lr,lb = preprocess(lr,lb, mapping)
         chart = alt.vconcat(chart, plot_rate_bw(lr,lb, (0,2), (0, 0.5), True, xdomain=(0,60)))
     alts.save(chart, "figures/partial_parition.pdf")
@@ -129,18 +143,22 @@ def pre_vote_partition_plot():
     for repeat in range(repeats):
         lr = f"results/res_etcd-pre-vote.simple.go.partial-partition.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.res"
         lb = f"results/pcap_etcd-pre-vote.simple.go.partial-partition.nn_3.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.pcap.throughput"
+        if not files_exist([lr,lb]):
+            return
         lr,lb = preprocess(lr,lb, mapping)
         chart = alt.vconcat(chart, plot_rate_bw(lr,lb, (0,2), (0, 0.5), True, xdomain=(0,60)))
     alts.save(chart, "figures/pre_vote_partition.pdf")
 
 def intermittent_full_plot():
     print("Plotting intermittent full partition")
-    print("WARNING: This plot can crash the plotting software since it has too many data points, it can however be extracted via the jupyter notebook interface")
+    print(WARNING + "This plot can crash the plotting software since it has too many data points, it can however be extracted via the jupyter notebook interface" + ENDC)
     mapping = {"10.0.0.1": "10.0.0.1", "10.0.0.2": "10.0.0.2", "10.0.0.3": "10.0.0.3", "10.0.0.4": "Client"}
     chart = alt.vconcat()
     for repeat in range(repeats):
         lr = f"results/res_etcd.simple.go.intermittent-full.nn_3.nc_1.write_ratio_1.mtbf_10.rate_1000.duration_600.tag_repeat-{repeat}-bandwidth.res"
         lb = f"results/pcap_etcd.simple.go.intermittent-full.nn_3.nc_1.write_ratio_1.mtbf_10.rate_1000.duration_600.tag_repeat-{repeat}-bandwidth.pcap.throughput"
+        if not files_exist([lr,lb]):
+            return
         lr,lb = preprocess(lr,lb, mapping)
         chart = alt.vconcat(chart, plot_rate_bw(lr,lb, (0,2), (0, 0.5), True, xdomain=(0,600)))
     alts.save(chart, "figures/intermittent_full.pdf")
@@ -204,6 +222,15 @@ def process(group, grouping_parameters, f):
     return res
 
 def validation_plot():
+    print("Plotting validation")
+    files = [ 
+            f"results/res_etcd.simple.go.none.nn_{n_servers}.nc_1.write_ratio_1.mtbf_1.rate_{rate}.duration_60.tag_repeat-{repeat}.res"
+        for rate in [1,2000,4000,6000,8000,10000,12000,14000,16000,18000,20000,22000,24000,26000,28000,30000]
+        for n_servers in [3,5,7,9]
+        for repeat in range(repeats)
+        ]
+    if not files_exist(files):
+        return
     # Rate Latency
     validation_data = pd.concat([
         pf.read_in_res(
@@ -247,10 +274,14 @@ def validation_plot():
     alts.save(chart, "figures/validation_cdf.pdf")
     
 def wan_plot():
+    print("Plotting WAN")
     chart = alt.vconcat()
     for repeat in range(repeats):
+        file = f"results/res_etcd.wan.go.none.nn_7.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.res",
+        if not files_exist(file):
+            return
         wan_data = pf.read_in_res(
-            f"results/res_etcd.wan.go.none.nn_7.nc_1.write_ratio_1.mtbf_1.rate_1000.duration_60.tag_repeat-{repeat}-bandwidth.res",
+            "file",
             {'repeat':repeat}
         )
     
@@ -268,9 +299,9 @@ def wan_plot():
 if __name__ == "__main__":
   alt.data_transformers.disable_max_rows()
 
+  validation_plot()
   leader_plot()
   partial_partition_plot()
+  intermittent_full_plot()
   pre_vote_partition_plot()
-#   validation_plot()
   wan_plot()
-#   intermittent_full_plot()
