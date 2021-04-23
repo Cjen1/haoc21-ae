@@ -2,3 +2,4 @@ pandas
 numpy
 altair
 altair_saver
+dpkt
