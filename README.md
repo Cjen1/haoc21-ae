@@ -25,25 +25,47 @@ We need the following packages installed with these versions:
 - `openvswitch-switch v2.9.8` 
 
 Install the internal packages:
-- Ensure you are within this directory: `cd haoc21-ae`
-- `python3 -m pip install -r requirements.txt`
-- `npm install vega-lite vega-cli canvas`
+Ensure you are within this directory: `cd haoc21-ae`
+```
+python3 -m pip install -r requirements.txt
+npm install vega-lite vega-cli canvas
+```
 
 ### Reproduce the experiements
-Run the following commands:
-- copy over the script into the reckon folder
-  - `cp reckon_script.py reckon/haoc.py`
-- Build and enter the docker container environment (This may take quite a while the first time)
-  - `./update_reckon_dockerfile.sh`
-  - `cd reckon`
-  - `make run`
-- The final `make run` should have placed you within the reckon container. Now execute the script to run all the tests (This may take up to a couple of hours). Additionally running concurrent workloads in not a massive issue since the traces in the paper should not pin the CPU.
-  - `python3 ./haoc.py`
-- Exit the container and return to this directory
-- Copy the data out of the container
-  - `docker cp reckon:/results ./results`
-- Generate bandwidth values from pcap files
-  - `./get_bandwidth.sh`
-- Create the figure direcotry and make the graphs
-  - `mkdir figures`
-  - `python3 ./plot_results.py`
+First copy over the script into the reckon folder and then build the container.
+Building the container may take some time to complete (~30 mins at most)
+```
+cp reckon_script.py reckon/haoc.py
+./update_reckon_dockerfile.sh
+cd reckon
+make run
+```
+
+`make run` should have placed you within the reckon container.
+Now you can execute the script to run the tests.
+
+If you want to run all the tests (~1 hour):
+```
+python3 ./haoc.py -l
+```
+
+If you want to just run the traces (~20 mins):
+```
+python3 ./haoc.py
+```
+
+Exit the contianer and return to this directory:
+```
+Ctrl - C
+cd ..
+```
+
+Copy the data out of the container, preprocess it and plot the figures:
+```
+docker cp reckon:/results ./results
+./get_bandwidth.sh
+mkdir figures
+python3 ./plot_results.py
+```
+
+If there are any tests which aren't run, the script will say that the relevant file is missing.
