@@ -21,7 +21,7 @@ However we expect that the following should be sufficient if change the `tmpfs` 
 ### Prerequisites
 We need the following packages installed with these versions:
 - `python v3.6.9` and `pip`
-- `npm v6.14.12`, [this may help]{https://github.com/nodejs/help/wiki/Installation#how-to-install-nodejs-via-binary-archive-on-linux}
+- `npm v6.14.12`, [this may help](https://github.com/nodejs/help/wiki/Installation#how-to-install-nodejs-via-binary-archive-on-linux)
 - `openvswitch-switch v2.9.8` 
 
 Install the internal packages:
